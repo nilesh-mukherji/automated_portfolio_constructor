@@ -15,8 +15,6 @@ def generate_descriptions(df):
         df.loc[i, "Description"] = callGemini(prompt=prompt)
         historical_vals[i] = get_historical_prices(row.Ticker)
 
-    print(historical_vals)
-
     for i, row in df.iterrows():
         portfolio_data.append({
             "Ticker": row.Ticker,
@@ -47,8 +45,6 @@ def get_historical_prices(ticker: str):
         
         # Download the data from Yahoo Finance
         data = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
-
-        st.table(data)
         
         if data.empty:
             print(f"No data found for ticker: {ticker}")
@@ -56,7 +52,6 @@ def get_historical_prices(ticker: str):
 
         # Extract the required columns and convert to a list of tuples
         result = [(row.name.strftime('%Y-%m-%d'), row['Close'][ticker]) for _, row in data.iterrows()]
-        st.markdown(result)
         
         return result
     except Exception as e:

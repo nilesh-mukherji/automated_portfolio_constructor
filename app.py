@@ -53,18 +53,67 @@ def add_profile(profile_input):
     else:
         st.warning("Please enter a valid investment profile.")
 
+def build_prompt_from_form(name, age, location, investable_assets, risk_tolerance, investment_goal):
+    return f"{name} is {age} years old, and is living in {location}. They have {investable_assets} dollars in investable assets, "\
+        f"and a {risk_tolerance} risk tolerance. Their investment goals include: {investment_goal}"
+
+def build_profile_form():
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        # Input fields for personal information
+        st.subheader("Personal Information")
+        name = st.text_input("Full Name", placeholder="Enter your full name")
+        age = st.number_input("Age", min_value=0, max_value=120, step=1, help="Enter the age in years")
+        location = st.text_input("Location", placeholder="Enter your city or country")
+    
+    with col2:
+        # Input fields for financial profile
+        st.subheader("Financial Profile")
+        investable_assets = st.number_input(
+            "Investable Assets ($)", 
+            min_value=0, 
+            step=1000, 
+            help="Enter the total investable assets in dollars"
+        )
+        risk_tolerance = st.select_slider(
+            "Risk Tolerance",
+            options=["Low", "Moderate", "High"],
+            help="Choose your investment risk tolerance level"
+        )
+        investment_goal = st.text_area(
+            "Investment Goal",
+            placeholder="Describe your primary investment goal (e.g., retirement, buying a house)"
+        )
+
+        def gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal): st.session_state.default_prompt =  build_prompt_from_form(name, age, location, investable_assets, risk_tolerance, investment_goal)
+
+        st.button("Let's make a prompt!", on_click=lambda: gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal))
+
+        return (name, age, location, investable_assets, risk_tolerance, investment_goal)
+
 
 def main():
     if "extracted_json" not in st.session_state:
+        st.session_state.default_prompt = "e.g., 24 year old aiming to generate a growth-driven portfolio..."
         # Streamlit app
         st.title("Investment Portfolio Recommender")
 
         # Input for the user profile
         profile_input = st.text_area("Enter your investment profile", 
-                                    placeholder="e.g., 24 year old aiming to generate a growth-driven portfolio...")
+                                    value=st.session_state.default_prompt)
 
         # Button to generate recommendations
         st.button("Get Recommendations", on_click=lambda: add_profile(profile_input))
+
+        # Form for prompt building
+        form_on = st.toggle("Need some help?", value=False)
+
+        if form_on:
+            build_profile_form()
+
+
+        
 
     else:
             try:
