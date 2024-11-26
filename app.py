@@ -30,6 +30,7 @@ def get_recommendations(profile):
             "that the user should consider investing in. Please reference historical beta and "
             "historical alpha (according to the CAPM model), as well as a suitable equities and "
             f"fixed income split: \"{profile}\"." +  ' It is essential to use this JSON format: {"portfolio":[{"ticker_value": ["security_type", "Allocation % as float", "Allocation $ as int", "Rational for security"]}], "port_rational": "Rational for portfolio construction", "warnings": "Warnings and disclaimers", "date": "current date in format YYYY-MM-DD"}'
+            "Please Ensure the format of the return is JSON compliant, meaning no characters that JSON cannot Accept"
         )
 
 
@@ -66,7 +67,12 @@ def main():
         st.button("Get Recommendations", on_click=lambda: add_profile(profile_input))
 
     else:
-            renderPortfolio(json.loads(st.session_state.extracted_json))
+            try:
+                renderPortfolio(json.loads(st.session_state.extracted_json))
+            except:
+                st.subheader("Whoops!")
+                print(st.session_state.extracted_json)
+                st.button("Reload")
             # Initialize session state
             if "current_card" not in st.session_state:
                 st.session_state.current_card = 0

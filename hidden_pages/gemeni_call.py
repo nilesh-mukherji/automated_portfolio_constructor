@@ -1,7 +1,10 @@
 import google.generativeai as genai
+import os
+
+API_KEY = os.getenv("API_KEY")
 
 # Set up your Gemini API key
-genai.configure(api_key="AIzaSyDBgCYefWCn8GO9BVB9HYWOFR8pjZfMrZo")
+genai.configure(api_key=API_KEY)
 
 def callGemini(prompt):
     try:
