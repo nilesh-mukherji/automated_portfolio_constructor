@@ -54,7 +54,7 @@ def renderCard(card):
         })
         fig = px.line(chart_data, x="Time", y="Value", title=f"Historical Performance of {card['Ticker']}")
         st.plotly_chart(fig, use_container_width=True)
-        st.table(chart_data)
+        st.table(chart_data.loc[::-6])
 
     # Long description (60%)
     with col2:
@@ -94,7 +94,6 @@ def displayDetails(df):
     if "print_view" not in st.session_state:
         with st.container(height=500, border=False):
             card = st.session_state.portfolio[st.session_state.current_card]
-            st.markdown(card)
             renderCard(card)
             
 
@@ -103,9 +102,9 @@ def displayDetails(df):
             with col1:
                 st.button("⬅ Back", on_click=lambda: go_back(len(st.session_state.portfolio)))
             
-            with col2:
-                def reCalc(): del st.session_state.portfolio
-                st.button("reCalc", on_click=reCalc)
+            # with col2:
+            #     def reCalc(): del st.session_state.portfolio
+            #     st.button("reCalc", on_click=reCalc)
 
             with col3:
                 st.button("Next ➡", on_click=lambda: go_next(len(st.session_state.portfolio)))
