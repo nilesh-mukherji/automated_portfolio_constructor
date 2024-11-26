@@ -94,7 +94,7 @@ def displayDetails(df):
     if "print_view" not in st.session_state:
         with st.container(height=500, border=False):
             card = st.session_state.portfolio[st.session_state.current_card]
-            print(card)
+            st.markdown(card)
             renderCard(card)
             
 
