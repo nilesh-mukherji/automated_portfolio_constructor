@@ -86,7 +86,7 @@ def build_profile_form():
             placeholder="Describe your primary investment goal (e.g., retirement, buying a house)"
         )
 
-        def gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal): st.session_state.default_prompt =  build_prompt_from_form(name, age, location, investable_assets, risk_tolerance, investment_goal)
+        def gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal): st.session_state.default_prompt = build_prompt_from_form(name, age, location, investable_assets, risk_tolerance, investment_goal)
 
         st.button("Let's make a prompt!", on_click=lambda: gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal))
 
@@ -94,7 +94,6 @@ def build_profile_form():
 
 def main():
     if "extracted_json" not in st.session_state:
-        st.session_state.default_prompt = "e.g., 24 year old aiming to generate a growth-driven portfolio..."
         # Streamlit app
         st.title("Investment Portfolio Recommender")
 
@@ -173,6 +172,8 @@ if __name__ == "__main__":
         </style>
         """
     )
+
+    st.session_state.default_prompt = "e.g., 24 year old aiming to generate a growth-driven portfolio..."
 
     main()
 
