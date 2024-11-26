@@ -1,0 +1,2 @@
+from hidden_pages.portfolio_render import renderPortfolio as PortfolioView
+from hidden_pages.sec_details import displayDetails
