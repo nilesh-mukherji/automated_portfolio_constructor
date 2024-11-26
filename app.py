@@ -90,7 +90,6 @@ def build_profile_form():
 
         st.button("Let's make a prompt!", on_click=lambda: gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal))
 
-        return (name, age, location, investable_assets, risk_tolerance, investment_goal)
 
 
 def main():
