@@ -94,12 +94,15 @@ def build_profile_form():
 
 def main():
     if "extracted_json" not in st.session_state:
+        def_prompt = "e.g., 24 year old aiming to generate a growth-driven portfolio..."
+        if "default_prompt" in st.session_state:
+            def_prompt = st.session_state.default_prompt
         # Streamlit app
         st.title("Investment Portfolio Recommender")
 
         # Input for the user profile
         profile_input = st.text_area("Enter your investment profile", 
-                                    value=st.session_state.default_prompt)
+                                    value=def_prompt)
 
         # Button to generate recommendations
         st.button("Get Recommendations", on_click=lambda: add_profile(profile_input))
@@ -137,6 +140,10 @@ def main():
                     del st.session_state.show_details
                 except:
                     pass
+                try:
+                    del st.session_state.default_prompt
+                except:
+                    pass
 
             st.button("Analyze a new Profile", on_click=new_prof)
             
@@ -172,8 +179,6 @@ if __name__ == "__main__":
         </style>
         """
     )
-
-    st.session_state.default_prompt = "e.g., 24 year old aiming to generate a growth-driven portfolio..."
 
     main()
 
