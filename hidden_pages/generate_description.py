@@ -15,6 +15,8 @@ def generate_descriptions(df):
         df.loc[i, "Description"] = callGemini(prompt=prompt)
         historical_vals[i] = get_historical_prices(row.Ticker)
 
+    print(historical_vals)
+
     for i, row in df.iterrows():
         portfolio_data.append({
             "Ticker": row.Ticker,
