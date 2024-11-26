@@ -102,6 +102,11 @@ def displayDetails(df):
             col1, col2, col3 = st.columns([1, 6, 1])
             with col1:
                 st.button("⬅ Back", on_click=lambda: go_back(len(st.session_state.portfolio)))
+            
+            with col2:
+                def reCalc(): del st.session_state.portfolio
+                st.button("reCalc", on_click=reCalc)
+
             with col3:
                 st.button("Next ➡", on_click=lambda: go_next(len(st.session_state.portfolio)))
 
