@@ -44,7 +44,6 @@ def renderPortfolio(portfolio_data):
             hole=0.4
         )
         st.plotly_chart(fig, use_container_width=True)
-        st.markdown(portfolio_df)
 
     # Table with clickable rows
     with col2:
