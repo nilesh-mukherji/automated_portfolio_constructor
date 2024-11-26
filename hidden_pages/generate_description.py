@@ -1,7 +1,7 @@
 import pandas as pd
 import yfinance as yf
 from .gemeni_call import callGemini
-
+import streamlit as st
 
 
 def generate_descriptions(df):
@@ -47,13 +47,15 @@ def get_historical_prices(ticker: str):
         
         # Download the data from Yahoo Finance
         data = yf.download(ticker, start=start_date, end=end_date, interval="1mo")
+
+        st.table(data)
         
         if data.empty:
             print(f"No data found for ticker: {ticker}")
             return []
 
         # Extract the required columns and convert to a list of tuples
-        result = [(row.name.strftime('%Y-%m-%d'), row['Close'].value) for _, row in data.iterrows()]
+        result = [(row.name.strftime('%Y-%m-%d'), row['Close']) for _, row in data.iterrows()]
         
         return result
     except Exception as e:
