@@ -55,7 +55,7 @@ def get_historical_prices(ticker: str):
             return []
 
         # Extract the required columns and convert to a list of tuples
-        result = [(row.name.strftime('%Y-%m-%d'), row['Close']) for _, row in data.iterrows()]
+        result = [(row.name.strftime('%Y-%m-%d'), row['Close'][ticker]) for _, row in data.iterrows()]
         st.markdown(result)
         
         return result
