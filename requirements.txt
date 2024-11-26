@@ -1,0 +1,4 @@
+plotly-express
+pandas
+yfinance
+google-generativeai
