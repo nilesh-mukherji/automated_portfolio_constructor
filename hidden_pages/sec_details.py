@@ -4,8 +4,8 @@ import plotly.express as px
 from .generate_description import generate_descriptions
 
 import os
-from dotenv import load_dotenv
-load_dotenv(verbose=True)
+# from dotenv import load_dotenv
+# load_dotenv(verbose=True)
 
 GENERATE_DATA = os.getenv("GENERATE_DATA") == '1'
 

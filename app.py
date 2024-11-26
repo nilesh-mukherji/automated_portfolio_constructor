@@ -1,18 +1,11 @@
 import streamlit as st
 import google.generativeai as genai
 import json
-import pandas as pd
-import plotly.express as px
 import re
 from hidden_pages.portfolio_render import renderPortfolio
 from hidden_pages.gemeni_call import callGemini
-from fpdf import FPDF
-import base64
 
 import os
-from dotenv import load_dotenv
-load_dotenv(verbose=True)
-
 
 RECS = """
         ```json 
@@ -48,6 +41,7 @@ def add_profile(profile_input):
                 recommendations = callGemini(get_recommendations(profile_input))
             else:
                 recommendations = RECS
+
             json_match = re.search(r'```json\s*(\{.*?\})\s*```', recommendations, re.DOTALL)
 
             extracted_json = json_match.group(1) if json_match else None
@@ -59,10 +53,6 @@ def add_profile(profile_input):
     else:
         st.warning("Please enter a valid investment profile.")
 
-
-def create_download_link(val, filename):
-    b64 = base64.b64encode(val)  # val looks like b'...'
-    return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="{filename}.pdf">Download file</a>'
 
 def main():
     if "extracted_json" not in st.session_state:
@@ -83,9 +73,18 @@ def main():
                 st.session_state.current_card = 0
 
             def new_prof(): 
-                del st.session_state.extracted_json
-                del st.session_state.portfolio
-                del st.session_state.show_details
+                try:
+                    del st.session_state.extracted_json
+                except:
+                    pass
+                try:
+                    del st.session_state.portfolio
+                except:
+                    pass
+                try:
+                    del st.session_state.show_details
+                except:
+                    pass
 
             st.button("Analyze a new Profile", on_click=new_prof)
             
@@ -94,15 +93,15 @@ def main():
                     st.session_state.print_view = True
                 else:
                     del st.session_state.print_view
-            st.toggle("PDF Format", on_change=print_view, value=True)
+            st.toggle("PDF Format", on_change=print_view, value="print_view" in st.session_state)
                 
 
 if __name__ == "__main__":
-    API_KEY = os.getenv("API_KEY")
+    # API_KEY = os.getenv("API_KEY")
     GENERATE_DATA = os.getenv("GENERATE_DATA") == '1'
 
     # Set up your Gemini API key
-    genai.configure(api_key=API_KEY)
+    # genai.configure(api_key=API_KEY)
 
     st.html("""
         <style>
@@ -111,12 +110,16 @@ if __name__ == "__main__":
             }
             
             @media print {
-                .stButton {
+                .stButton, .stCheckbox {
+                    display: none;
+                }
+                .stToggle {
                     display: none;
                 }
             }
         </style>
         """
     )
+
     main()
 
