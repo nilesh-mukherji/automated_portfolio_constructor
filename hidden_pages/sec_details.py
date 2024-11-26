@@ -54,7 +54,7 @@ def renderCard(card):
         })
         fig = px.line(chart_data, x="Time", y="Value", title=f"Historical Performance of {card['Ticker']}")
         st.plotly_chart(fig, use_container_width=True)
-        st.write("### Price History")
+        st.write("#### Price History")
         st.table(chart_data.loc[::-3].reset_index(drop=True))
 
     # Long description (60%)
