@@ -30,7 +30,7 @@ def get_recommendations(profile):
             "that the user should consider investing in. Please reference historical beta and "
             "historical alpha (according to the CAPM model), as well as a suitable equities and "
             f"fixed income split: \"{profile}\"." +  ' It is essential to use this JSON format: {"portfolio":[{"ticker_value": ["security_type", "Allocation % as float", "Allocation $ as int", "Rational for security"]}], "port_rational": "Rational for portfolio construction", "warnings": "Warnings and disclaimers", "date": "current date in format YYYY-MM-DD"}'
-            "Please Ensure the format of the return is JSON compliant, meaning no characters that JSON cannot Accept"
+            "Please Ensure the format of the return is JSON compliant, meaning no characters that JSON cannot Accept. An example JSON is "+RECS
         )
 
 
@@ -53,9 +53,10 @@ def add_profile(profile_input):
     else:
         st.warning("Please enter a valid investment profile.")
 
-def build_prompt_from_form(name, age, location, investable_assets, risk_tolerance, investment_goal):
+def build_prompt_from_form(name, age, location, investable_assets, risk_tolerance, investment_goal, checked):
     return f"{name} is {age} years old, and is living in {location}. They have {investable_assets} dollars in investable assets, "\
-        f"and a {risk_tolerance} risk tolerance. Their investment goals include: {investment_goal}"
+        f"and a {risk_tolerance} risk tolerance. Their investment goals include: {investment_goal}. Please invest with an eye towards advancing these causes, "\
+            f"which the client is very passionate about: {checked}"
 
 def build_profile_form():
     col1, col2 = st.columns(2)
@@ -86,9 +87,47 @@ def build_profile_form():
             placeholder="Describe your primary investment goal (e.g., retirement, buying a house)"
         )
 
-        def gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal): st.session_state.default_prompt = build_prompt_from_form(name, age, location, investable_assets, risk_tolerance, investment_goal)
+        causes = {
+            "Environmental Sustainability": [
+                "Climate Change Mitigation",
+                "Conservation of Natural Resources",
+                "Pollution Control",
+                "Biodiversity Protection",
+                "Transition to Green Technologies"
+            ],
+            "Social Justice and Equity": [
+                "Diversity, Equity, and Inclusion (DEI)",
+                "Fair Labor and Workers' Rights",
+                "Access to Education",
+                "Affordable Healthcare and Well-Being",
+                "Community Empowerment"
+            ],
+            "Governance and Ethical Practices": [
+                "Corporate Accountability",
+                "Anti-Corruption Policies",
+                "Consumer Privacy and Data Protection",
+                "Sustainable Supply Chains",
+                "Innovations Serving the Greater Good"
+            ]
+        }
 
-        st.button("Let's make a prompt!", on_click=lambda: gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal))
+    col1, col2, col3 = st.columns(3)
+
+    # Dictionary to store the results
+    checked_items = []
+
+    # Render checkboxes in each column
+    for i, (cause, sub_causes) in enumerate(causes.items()):
+        with [col1, col2, col3][i]:  # Dynamically choose the column
+            st.write(f"### {cause}")
+            for sub_cause in sub_causes:
+                if st.checkbox(sub_cause, key=sub_cause):
+                    checked_items.append(sub_cause)
+
+
+    def gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal, checked): st.session_state.default_prompt = build_prompt_from_form(name, age, location, investable_assets, risk_tolerance, investment_goal, checked_items)
+
+    st.button("Let's make a prompt!", on_click=lambda: gen_prompt(name, age, location, investable_assets, risk_tolerance, investment_goal, checked_items))
 
 
 
@@ -108,7 +147,7 @@ def main():
         st.button("Get Recommendations", on_click=lambda: add_profile(profile_input))
 
         # Form for prompt building
-        form_on = st.toggle("Need some help?", value=False)
+        form_on = st.toggle("Profile Builder", value=False)
 
         if form_on:
             build_profile_form()
